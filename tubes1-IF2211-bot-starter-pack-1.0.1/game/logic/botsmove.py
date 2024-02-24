@@ -35,4 +35,5 @@ class BotsMove(BaseLogic):
                 self.goal_position.y,
             )
         else:
-            #roam arround
+            #roam arround 
+            return
