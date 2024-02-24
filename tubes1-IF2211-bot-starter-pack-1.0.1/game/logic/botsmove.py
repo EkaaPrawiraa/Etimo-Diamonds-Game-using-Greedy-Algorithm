@@ -27,4 +27,12 @@ class BotsMove(BaseLogic):
 
         current_position = board_bot.position
         if self.goal_position:
-            
+        # We are aiming for a specific position, calculate delta
+            delta_x, delta_y = get_direction(
+                current_position.x,
+                current_position.y,
+                self.goal_position.x,
+                self.goal_position.y,
+            )
+        else:
+            #roam arround
