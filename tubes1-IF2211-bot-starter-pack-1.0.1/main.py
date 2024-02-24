@@ -14,7 +14,7 @@ init()
 BASE_URL = "http://localhost:3000/api"
 DEFAULT_BOARD_ID = 1
 CONTROLLERS = {
-    "Random": RandomLogic,"BotsMove":BotsMove,
+    "BotsMove": BotsMove,
 }
 
 ###############################################################################
@@ -160,7 +160,6 @@ if not current_board_id:
 #
 ###############################################################################
 board = board_handler.get_board(current_board_id)
-
 move_delay = board.minimum_delay_between_moves / 1000
 
 ###############################################################################
@@ -169,21 +168,12 @@ move_delay = board.minimum_delay_between_moves / 1000
 #
 ###############################################################################
 while True:
-        # Find our info among the bots on the board
-    diamond_objects = board.diamonds
-
-        # Menampilkan posisi semua objek diamonds
-    for diamond in diamond_objects:
-        if diamond.properties.points==2:
-            print("RED")
-        else:
-            print("BLUE")
-        print(f"Diamond ID: {diamond.properties.points}, Position: ({diamond.position.x}, {diamond.position.y})")
+    # Find our info among the bots on the board
     board_bot = board.get_bot(bot)
     if not board_bot:
         # Managed to get game over
         break
-    
+
     # Calculate next move
     delta_x, delta_y = bot_logic.next_move(board_bot, board)
     # delta_x, delta_y = (1, 0)
@@ -215,6 +205,7 @@ while True:
     # Don't spam the board more than it allows!
     # sleep(move_delay * time_factor)
     sleep(1)
+
 
 ###############################################################################
 #
