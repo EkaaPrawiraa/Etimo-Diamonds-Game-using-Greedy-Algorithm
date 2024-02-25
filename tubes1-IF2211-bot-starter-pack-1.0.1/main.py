@@ -12,7 +12,7 @@ from game.logic.botsmove import BotsMove
 
 init()
 BASE_URL = "http://localhost:3000/api"
-DEFAULT_BOARD_ID = 1
+DEFAULT_BOARD_ID = 9
 CONTROLLERS = {
     "BotsMove": BotsMove,
 }
