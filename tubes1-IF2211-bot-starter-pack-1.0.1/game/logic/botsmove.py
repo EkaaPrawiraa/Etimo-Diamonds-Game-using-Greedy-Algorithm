@@ -22,10 +22,45 @@ class BotsMove(BaseLogic):
             self.goal_position: Optional[Position] = None
             self.current_direction = 0
             #sisanya apa
+    def totalpointblock(self, start_position, diamond_objects):
+        whichBlock_x = start_position.x // 5
+        whichBlock_y = start_position.y // 5
+        totaleveryblock = []
+
+        for i in range(3):
+            for j in range(3):
+                block_start_row = (whichBlock_x + i) * 5
+                block_end_row = (whichBlock_x + i + 1) * 5
+                block_start_col = (whichBlock_y + j) * 5
+                block_end_col = (whichBlock_y + j + 1) * 5
+                totalpointblock = 0
+                listrangediamond = []
+
+                for diamond in diamond_objects:
+                    if block_start_row <= diamond.position.x < block_end_row and block_start_col <= diamond.position.y < block_end_col:
+                        totalpointblock += diamond.properties.points
+                        listrangediamond.append((abs(abs(diamond.position.x - start_position.x) + abs(diamond.position.y - start_position.y)), diamond.position))
+
+                if totalpointblock > 0:
+                    sorted_listrangediamond = sorted(listrangediamond, key=lambda x: x[0])
+                    _, locationdiamond = sorted_listrangediamond[0]
+                    totaleveryblock.append((totalpointblock, locationdiamond))
+
+        if totaleveryblock:
+            sorted_totaleveryblock = sorted(totaleveryblock, key=lambda x: x[0])
+            _, goallocation = sorted_totaleveryblock[0]
+            return totalpointblock, self.goal_position.x
+        else:
+            return 0, None
+
+                    
+            
+         
     def next_move(self, board_bot: GameObject, board: Board):
             props = board_bot.properties
+            print(f"Time left : {props.milliseconds_left/1000} sec\n")
             # Analyze new state
-            if props.diamonds == 5:
+            if props.diamonds == 5 or (props.milliseconds_left<5000 and props.diamonds !=0):
                 # Move to base
                 base = board_bot.properties.base
                 self.goal_position = base
@@ -71,15 +106,16 @@ class BotsMove(BaseLogic):
                 if totalpointblock==0:
                     #pindah block
                     #kode sementara
-                    start_time = time.time()
-                    for diamond in diamond_objects:
-                            listrangediamond.append((abs(abs(diamond.position.x - current_position.x) + abs(diamond.position.y - current_position.y)), diamond.position))
+                    # start_time = time.time()
+                    # for diamond in diamond_objects:
+                    #         listrangediamond.append((abs(abs(diamond.position.x - current_position.x) + abs(diamond.position.y - current_position.y)), diamond.position))
                     
-                    sorted_listrangediamond = sorted(listrangediamond, key=lambda x: x[0])
-                    _,self.goal_position=sorted_listrangediamond[0]
-                    end_time = time.time()
-                    print(f"Time : {end_time-start_time} sec\n")
-
+                    # sorted_listrangediamond = sorted(listrangediamond, key=lambda x: x[0])
+                    # _,self.goal_position=sorted_listrangediamond[0]
+                    # end_time = time.time()
+                    # print(f"Time : {end_time-start_time} sec\n")
+                    _,goal_location= totalpointblock(self,current_position,diamond_objects)
+                    self.goal_position=goal_location
                     
                     delta_x, delta_y = get_direction(
                         current_position.x,
@@ -101,27 +137,4 @@ class BotsMove(BaseLogic):
                     )
             return delta_x,delta_y
     
-    # def totalpointblock(self,start_position,diamond_objects):
-    #     whichBlock_x = 15//5
-    #     whichBlock_y=15//5
-    #     totaleveryblock=[]
-    #     for i in range(3):
-    #          for j in range(3):
-    #             if i != start_position.x and j !=start_position.y:
-    #                 block_start_row = whichBlock_x * 5
-    #                 block_end_row = (whichBlock_x + 1) * 5
-    #                 block_start_col = whichBlock_y * 5
-    #                 block_end_col = (whichBlock_y + 1) * 5
-    #                 totalpointblock=0
-    #                 listrangediamond=[]
-    #                 for i in range(block_start_row,block_end_row):
-    #                         for j in range(block_start_col,block_end_col):
-    #                             for diamond in diamond_objects:
-    #                                 if (diamond.position.x==i ) and (diamond.position.y==j):
-    #                                     totalpointblock+=diamond.properties.points
-    #                                     print(f"total :\n",diamond.properties.points)
-    #                                     listrangediamond.append((abs(abs(diamond.position.x - start_position.x) + abs(diamond.position.y - start_position.y)), diamond.position))
-    #                 sorted_listrangediamond = sorted(listrangediamond, key=lambda x: x[0])
-    #                 _,self.goal_position=sorted_listrangediamond[0]
-            
-         
+    
