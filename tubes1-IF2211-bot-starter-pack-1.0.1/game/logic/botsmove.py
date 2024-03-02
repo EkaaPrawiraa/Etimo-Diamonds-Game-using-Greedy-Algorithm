@@ -67,9 +67,8 @@ class BotsMove(BaseLogic):
             # Analyze new state
             base = board_bot.properties.base
             current_position = board_bot.position
-
             distanceToBase = abs(abs(base.x- current_position.x) + abs(base.y - current_position.y))
-            if props.diamonds == 5 or props.diamonds == 4 or ( (distanceToBase +1 == (props.milliseconds_left/1000)) and props.diamonds !=0): #error pas inventory diamond = 4 terus dapet diamond merah
+            if props.diamonds == 5 or ( (distanceToBase +1 == (props.milliseconds_left/1000)) and props.diamonds !=0): #error pas inventory diamond = 4 terus dapet diamond merah
                 # Move to base
                 print("OTW Base\n")
                 base = board_bot.properties.base
@@ -109,13 +108,12 @@ class BotsMove(BaseLogic):
                                if (diamond.position.x==i ) and (diamond.position.y==j):
                                     totalpointblock+=diamond.properties.points
                                     # print(f"total :\n",diamond.properties.points)
-                                    listrangediamond.append((abs(abs(diamond.position.x - current_position.x) + abs(diamond.position.y - current_position.y)), diamond.position))
+                                    listrangediamond.append((abs(abs(diamond.position.x - current_position.x) + abs(diamond.position.y - current_position.y)), diamond.position , diamond.properties.points))
 
                 
                 # print(f"total :\n",totalpointblock)
                 if totalpointblock==0:
                     #pindah block
-             
                     # end_time = time.time()
                     print(f"Sini\n")
                     self.goal_position = self.totalpointblock(board_bot.properties.base, diamond_objects)
@@ -133,7 +131,11 @@ class BotsMove(BaseLogic):
                  
                     print(f"Sono\n")
                     sorted_listrangediamond = sorted(listrangediamond, key=lambda x: x[0])
-                    _,self.goal_position=sorted_listrangediamond[0]
+                    print(sorted_listrangediamond)
+                    if props.diamonds==4 and sorted_listrangediamond[0][2]==2:
+                         sorted_listrangediamond.pop(0)
+                         print("MERAH")
+                    _,self.goal_position,_=sorted_listrangediamond[0]
 
                     # print(f"Position goals: ({self.goal_position.x}, {self.goal_position.y})")
                     delta_x, delta_y = get_direction(
