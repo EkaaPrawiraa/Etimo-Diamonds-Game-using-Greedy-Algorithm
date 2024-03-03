@@ -52,13 +52,13 @@ class BotsMove(BaseLogic):
         
         for item in red_button:
                 if item.type=="DiamondButtonGameObject":
-                    red = red_button
+                    red = item
                     isred = True
                     break
 
         redbuttonpos=red.position
 
-        return totalpointblock, listrangediamond, isred
+        return totalpointblock, listrangediamond, isred, redbuttonpos
            
     def totalpointblock(self,start_position,diamond_objects):
         # whichBlock_x = 15//5
@@ -120,13 +120,13 @@ class BotsMove(BaseLogic):
                 # print(f"total :\n",totalpointblock)
                 diamond_objects = board.diamonds
                 red_button = board.game_objects
-                totalpointblock, listrangediamond, red = self.current_totalpointblock(current_position, diamond_objects, red_button)
+                totalpointblock, listrangediamond, red, redpos = self.current_totalpointblock(current_position, diamond_objects, red_button)
                 if totalpointblock==0:
                     #pindah block
                     # end_time = time.time()
                     print(f"Sini\n")
                     if(red):
-                        self.goal_position = red_button.position
+                        self.goal_position = redpos
                     else:
                         self.goal_position = self.totalpointblock(board_bot.properties.base, diamond_objects)
 
