@@ -32,14 +32,13 @@ class BotsMove(BaseLogic):
             self.goal_position: Optional[Position] = None
             self.current_direction = 0
             #sisanya apa 
-    def current_totalpointblock(self, current_position, diamond_objects, red_button):
+    def current_totalpointblock(self, current_position, diamond_objects):
         whichBlock_x = current_position.x//5
         whichBlock_y=current_position.y//5
         block_start_row = whichBlock_x * 5
         block_end_row = (whichBlock_x + 1) * 5
         block_start_col = whichBlock_y * 5
         block_end_col = (whichBlock_y + 1) * 5
-        isred = False
         totalpointblock=0
         listrangediamond=[]
         for k in range(block_start_row,block_end_row):
@@ -49,16 +48,9 @@ class BotsMove(BaseLogic):
                             totalpointblock+=diamond.properties.points
                             # print(f"total :\n",diamond.properties.points)
                             listrangediamond.append((abs(abs(diamond.position.x - current_position.x) + abs(diamond.position.y - current_position.y)), diamond.position, diamond.properties.points))
-        
-        for item in red_button:
-                if item.type=="DiamondButtonGameObject":
-                    red = item
-                    isred = True
-                    break
 
-        redbuttonpos=red.position
 
-        return totalpointblock, listrangediamond, isred, redbuttonpos
+        return totalpointblock, listrangediamond
            
     def totalpointblock(self,start_position,diamond_objects):
         # whichBlock_x = 15//5
@@ -116,16 +108,21 @@ class BotsMove(BaseLogic):
                     self.goal_position.y,
                 )
             else:
-
                 # print(f"total :\n",totalpointblock)
                 diamond_objects = board.diamonds
                 red_button = board.game_objects
-                totalpointblock, listrangediamond, red, redpos = self.current_totalpointblock(current_position, diamond_objects, red_button)
+                totalpointblock, listrangediamond = self.current_totalpointblock(current_position, diamond_objects)
                 if totalpointblock==0:
+                    for item in red_button:
+                        if item.type=='DiamondButtonGameObject':
+                            red=item
+                            break
+                    
+                    redpos = red.position
                     #pindah block
                     # end_time = time.time()
                     print(f"Sini\n")
-                    if(red):
+                    if(red) and ((redpos.x//5 == current_position.x//5) and (redpos.y//5 == current_position.y//5)):
                         self.goal_position = redpos
                     else:
                         self.goal_position = self.totalpointblock(board_bot.properties.base, diamond_objects)
