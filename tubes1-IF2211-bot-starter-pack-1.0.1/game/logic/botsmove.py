@@ -31,7 +31,35 @@ class BotsMove(BaseLogic):
             self.block_in = [(0,0),(0,1),(0,2),(1,0),(1,1),(1,2),(2,0),(2,1),(2,2)]
             self.goal_position: Optional[Position] = None
             self.current_direction = 0
-            #sisanya apa             
+            #sisanya apa 
+    def current_totalpointblock(self, current_position, diamond_objects, red_button):
+        whichBlock_x = current_position.x//5
+        whichBlock_y=current_position.y//5
+        block_start_row = whichBlock_x * 5
+        block_end_row = (whichBlock_x + 1) * 5
+        block_start_col = whichBlock_y * 5
+        block_end_col = (whichBlock_y + 1) * 5
+        isred = False
+        totalpointblock=0
+        listrangediamond=[]
+        for k in range(block_start_row,block_end_row):
+                for l in range(block_start_col,block_end_col):
+                    for diamond in diamond_objects:
+                        if (diamond.position.x==k ) and (diamond.position.y==l):
+                            totalpointblock+=diamond.properties.points
+                            # print(f"total :\n",diamond.properties.points)
+                            listrangediamond.append((abs(abs(diamond.position.x - current_position.x) + abs(diamond.position.y - current_position.y)), diamond.position, diamond.properties.points))
+        
+        for item in red_button:
+                if item.type=="DiamondButtonGameObject":
+                    red = red_button
+                    isred = True
+                    break
+
+        redbuttonpos=red.position
+
+        return totalpointblock, listrangediamond, isred
+           
     def totalpointblock(self,start_position,diamond_objects):
         # whichBlock_x = 15//5
         # whichBlock_y=15//5
@@ -68,7 +96,7 @@ class BotsMove(BaseLogic):
             base = board_bot.properties.base
             current_position = board_bot.position
             distanceToBase = abs(abs(base.x- current_position.x) + abs(base.y - current_position.y))
-            if props.diamonds == 5 or ( (distanceToBase +1 == (props.milliseconds_left/1000)) and props.diamonds !=0): #error pas inventory diamond = 4 terus dapet diamond merah
+            if props.diamonds == 5 or ( (distanceToBase +1 == (props.milliseconds_left/1000)) and props.diamonds !=0) or (distanceToBase == (props.milliseconds_left/1000)) : #error pas inventory diamond = 4 terus dapet diamond merah
                 # Move to base
                 print("OTW Base\n")
                 base = board_bot.properties.base
@@ -88,38 +116,21 @@ class BotsMove(BaseLogic):
                     self.goal_position.y,
                 )
             else:
-                #roam arround
-                # location 0f diamonds
-                diamond_objects = board.diamonds
-                ##Finding all diamond object in 25 section
-                block_size =5
 
-                whichBlock_x = current_position.x//5
-                whichBlock_y=current_position.y//5
-                block_start_row = whichBlock_x * 5
-                block_end_row = (whichBlock_x + 1) * 5
-                block_start_col = whichBlock_y * 5
-                block_end_col = (whichBlock_y + 1) * 5
-                totalpointblock=0
-                listrangediamond=[]
-                for i in range(block_start_row,block_end_row):
-                     for j in range(block_start_col,block_end_col):
-                          for diamond in diamond_objects:
-                               if (diamond.position.x==i ) and (diamond.position.y==j):
-                                    totalpointblock+=diamond.properties.points
-                                    # print(f"total :\n",diamond.properties.points)
-                                    listrangediamond.append((abs(abs(diamond.position.x - current_position.x) + abs(diamond.position.y - current_position.y)), diamond.position , diamond.properties.points))
-
-                
                 # print(f"total :\n",totalpointblock)
+                diamond_objects = board.diamonds
+                red_button = board.game_objects
+                totalpointblock, listrangediamond, red = self.current_totalpointblock(current_position, diamond_objects, red_button)
                 if totalpointblock==0:
                     #pindah block
                     # end_time = time.time()
                     print(f"Sini\n")
-                    self.goal_position = self.totalpointblock(board_bot.properties.base, diamond_objects)
+                    if(red):
+                        self.goal_position = red_button.position
+                    else:
+                        self.goal_position = self.totalpointblock(board_bot.properties.base, diamond_objects)
 
                     # self.goal_position=goal_location
-                    
                     delta_x, delta_y = get_direction(
                         current_position.x,
                         current_position.y,
@@ -130,11 +141,12 @@ class BotsMove(BaseLogic):
                      #cri terdekat
                  
                     print(f"Sono\n")
+                    
                     sorted_listrangediamond = sorted(listrangediamond, key=lambda x: x[0])
                     print(sorted_listrangediamond)
-                    if props.diamonds==4 and sorted_listrangediamond[0][2]==2:
-                         sorted_listrangediamond.pop(0)
-                         print("MERAH")
+                    # if props.diamonds==4 and sorted_listrangediamond[0][2]==2:
+                    #      sorted_listrangediamond.pop(0)
+                    #      print("MERAH")
                     _,self.goal_position,_=sorted_listrangediamond[0]
 
                     # print(f"Position goals: ({self.goal_position.x}, {self.goal_position.y})")
@@ -146,6 +158,26 @@ class BotsMove(BaseLogic):
                     )
             return delta_x,delta_y
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
            #kode sementara
                     # start_time = time.time()
                     # for diamond in diamond_objects:
