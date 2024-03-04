@@ -2,7 +2,6 @@ from typing import Optional
 from game.logic.base import BaseLogic
 from game.models import Board,GameObject,Position,Config
 from typing import Optional
-from ..util import get_direction
 import random
 import time
 
@@ -34,6 +33,27 @@ class BotsMove(BaseLogic):
             self.goal_position: Optional[Position] = None
             self.current_direction = 0
             #sisanya apa 
+
+    def boundary(self, n, smallest, largest):
+        return max(smallest, min(n, largest))
+    
+    def get_way(self, current_x, current_y, dest_x, dest_y):
+        delta_x = self.boundary(dest_x - current_x, -1, 1)
+        delta_y = self.boundary(dest_y - current_y, -1, 1)
+        if delta_x != 0:
+            delta_y = 0
+        if delta_x==0 and delta_y==0: #buat tele
+            if(current_x == 0):
+                delta_y = 1
+            elif(current_x == 14):
+                delta_y = -1
+            elif(current_y == 0):
+                delta_x = 1
+            elif(current_y == 14):
+                delta_x = -1
+            
+
+        return (delta_x, delta_y)
     
     def get_redbut_telep(self, board,board_bot):
         item_board = board.game_objects
@@ -121,60 +141,37 @@ class BotsMove(BaseLogic):
                 print("OTW Base\n")
                 base = board_bot.properties.base
                 self.goal_position = base
-            else:
-                # Just roam around
-                self.goal_position = None
-
-            
-
-            if self.goal_position:
-            # We are aiming for a specific position, calculate delta
-                delta_x, delta_y = get_direction(
+                
+                delta_x, delta_y = self.get_way(
                     current_position.x,
                     current_position.y,
                     self.goal_position.x,
                     self.goal_position.y,
                 )
             else:
-                # print(f"total :\n",totalpointblock)
                 diamond_objects = board.diamonds
                 totalpointblock, listrangediamond = self.current_totalpointblock(current_position, diamond_objects)
                 redpos, teleport = self.get_redbut_telep(board,board_bot)
                 _, telestart = teleport[0]
+                _, teletarget = teleport[1]
+                total_teletarget,_ = self.current_totalpointblock(teletarget, diamond_objects)
                 if totalpointblock==0: ##bagian red buttoon
                     print(f"Sini\n")
-                    if ((redpos.x//5 == current_position.x//5) and (redpos.y//5 == current_position.y//5)):
-                        self.goal_position = redpos
-                        delta_x, delta_y = get_direction(
-                        current_position.x,
-                        current_position.y,
-                        self.goal_position.x,
-                        self.goal_position.y,
-                    )
-                    
-                    if ((telestart.x//5 == current_position.x//5) and (telestart.y//5 == current_position.y//5)):
+                    if ((telestart.x//5 == current_position.x//5) and (telestart.y//5 == current_position.y//5)) and (total_teletarget != 0):
                         print(f"tele\n")
                         self.goal_position = telestart
-                        delta_x, delta_y = get_direction(
-                        current_position.x,
-                        current_position.y,
-                        self.goal_position.x,
-                        self.goal_position.y,
-                        )
-                        
-                        
-
-                        # self.goal_position=None
+                    elif ((redpos.x//5 == current_position.x//5) and (redpos.y//5 == current_position.y//5)):
+                        self.goal_position = redpos
                     else:
                         self.goal_position = self.totalpointblock(current_position, diamond_objects)
-                        delta_x, delta_y = get_direction(
+
+                    # self.goal_position=goal_location
+                    delta_x, delta_y = self.get_way(
                         current_position.x,
                         current_position.y,
                         self.goal_position.x,
                         self.goal_position.y,
                     )
-
-                    # self.goal_position=goal_location
                     
                 else:
                      #cri terdekat
@@ -189,12 +186,13 @@ class BotsMove(BaseLogic):
                     _,self.goal_position,_=sorted_listrangediamond[0]
 
                     # print(f"Position goals: ({self.goal_position.x}, {self.goal_position.y})")
-                    delta_x, delta_y = get_direction(
+                    delta_x, delta_y = self.get_way(
                         current_position.x,
                         current_position.y,
                         self.goal_position.x,
                         self.goal_position.y,
                     )
+
             return delta_x,delta_y
     
 
