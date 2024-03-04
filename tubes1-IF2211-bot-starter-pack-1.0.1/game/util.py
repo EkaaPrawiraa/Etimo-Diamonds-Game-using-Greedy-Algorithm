@@ -10,6 +10,8 @@ def get_direction(current_x, current_y, dest_x, dest_y):
     delta_y = clamp(dest_y - current_y, -1, 1)
     if delta_x != 0:
         delta_y = 0
+    if delta_x==0 and delta_y==0: #buat tele
+        delta_x=1
     return (delta_x, delta_y)
 
 

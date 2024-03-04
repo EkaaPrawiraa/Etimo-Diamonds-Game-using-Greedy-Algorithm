@@ -34,6 +34,31 @@ class BotsMove(BaseLogic):
             self.goal_position: Optional[Position] = None
             self.current_direction = 0
             #sisanya apa 
+    
+    def get_redbut_telep(self, board,board_bot):
+        item_board = board.game_objects
+        teleports = []
+        current_position = board_bot.position
+        checkred = False
+        checktele = False
+        for item in item_board:
+            if(checkred) and (checktele):
+                 break
+            
+            else:
+                if item.type=='DiamondButtonGameObject':
+                    red=item
+                    checkred = True
+                elif item.type=='TeleportGameObject':
+                    teleports.append((abs(abs(item.position.x - current_position.x) + abs(item.position.y - current_position.y)), item.position))
+                    if(len(teleports)>1):
+                        sorted_teleport = sorted(teleports,key=lambda x: x[0])
+                        checktele = True
+                            
+        redpos = red.position
+
+        return redpos, sorted_teleport
+    
     def current_totalpointblock(self, current_position, diamond_objects):
         whichBlock_x = current_position.x//5
         whichBlock_y=current_position.y//5
@@ -50,6 +75,7 @@ class BotsMove(BaseLogic):
                             totalpointblock+=diamond.properties.points
                             # print(f"total :\n",diamond.properties.points)
                             listrangediamond.append((abs(abs(diamond.position.x - current_position.x) + abs(diamond.position.y - current_position.y)), diamond.position, diamond.properties.points))
+                            
 
 
         return totalpointblock, listrangediamond
@@ -82,7 +108,7 @@ class BotsMove(BaseLogic):
         _,_, self.goal_position=sorted_totaleveryblock[0]
         return self.goal_position
 
-         
+
     def next_move(self, board_bot: GameObject, board: Board):
             props = board_bot.properties
             print(f"Time left : {props.milliseconds_left/1000} sec\n")
@@ -112,38 +138,44 @@ class BotsMove(BaseLogic):
             else:
                 # print(f"total :\n",totalpointblock)
                 diamond_objects = board.diamonds
-                item_board = board.game_objects
                 totalpointblock, listrangediamond = self.current_totalpointblock(current_position, diamond_objects)
-                teleports = []
-                for item in item_board:
-                    if item.type=='DiamondButtonGameObject':
-                        red=item
-                    elif item.type=='TeleportGameObject':
-                        teleports.append((abs(abs(item.position.x - current_position.x) + abs(item.position.y - current_position.y)), item.position))
-                        if(len(teleports) == 2):
-                            sorted_teleport = sorted(teleports,key=lambda x: x[0])
-                            
-                    
-                
-                redpos = red.position
-                _, telpos = sorted_teleport[1]
+                redpos, teleport = self.get_redbut_telep(board,board_bot)
+                _, telestart = teleport[0]
                 if totalpointblock==0: ##bagian red buttoon
                     print(f"Sini\n")
-                    if(red) and ((redpos.x//5 == current_position.x//5) and (redpos.y//5 == current_position.y//5)):
+                    if ((redpos.x//5 == current_position.x//5) and (redpos.y//5 == current_position.y//5)):
                         self.goal_position = redpos
-                    
-                    if(sorted_teleport) and ((telpos.x//5 == current_position.x//5) and (telpos.y//5 == current_position.y//5)):
-                         self.goal_position = telpos
-                    else:
-                        self.goal_position = self.totalpointblock(board_bot.properties.base, diamond_objects)
-
-                    # self.goal_position=goal_location
-                    delta_x, delta_y = get_direction(
+                        delta_x, delta_y = get_direction(
                         current_position.x,
                         current_position.y,
                         self.goal_position.x,
                         self.goal_position.y,
                     )
+                    
+                    if ((telestart.x//5 == current_position.x//5) and (telestart.y//5 == current_position.y//5)):
+                        print(f"tele\n")
+                        self.goal_position = telestart
+                        delta_x, delta_y = get_direction(
+                        current_position.x,
+                        current_position.y,
+                        self.goal_position.x,
+                        self.goal_position.y,
+                        )
+                        
+                        
+
+                        # self.goal_position=None
+                    else:
+                        self.goal_position = self.totalpointblock(current_position, diamond_objects)
+                        delta_x, delta_y = get_direction(
+                        current_position.x,
+                        current_position.y,
+                        self.goal_position.x,
+                        self.goal_position.y,
+                    )
+
+                    # self.goal_position=goal_location
+                    
                 else:
                      #cri terdekat
                  
