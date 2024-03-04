@@ -61,7 +61,7 @@ class BotsMove(BaseLogic):
         item=board.game_objects
         tacklers=[]
         for a in item:
-            if a.type=="BotGameObject" and a.properties.can_tackle and a!=board_bot:
+            if a.type=="BotGameObject" and a.properties.can_tackle and a.position!=board_bot.position:
                 tacklers.append(a)
         return tacklers
     def get_redbut_telep(self, board,board_bot):
