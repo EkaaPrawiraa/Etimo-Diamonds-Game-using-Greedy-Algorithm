@@ -54,7 +54,16 @@ class BotsMove(BaseLogic):
             
 
         return (delta_x, delta_y)
-    
+    def chase(self, bot2:GameObject):
+        self.goal_position=bot2.position
+
+    def get_tacklebot(self, board:Board, board_bot):
+        item=board.game_objects
+        tacklers=[]
+        for a in item:
+            if a.type=="BotGameObject" and a.properties.can_tackle and a!=board_bot:
+                tacklers.append(a)
+        return tacklers
     def get_redbut_telep(self, board,board_bot):
         item_board = board.game_objects
         teleports = []
@@ -63,7 +72,7 @@ class BotsMove(BaseLogic):
         checktele = False
         for item in item_board:
             if(checkred) and (checktele):
-                 break
+                break
             
             else:
                 if item.type=='DiamondButtonGameObject':
@@ -141,7 +150,14 @@ class BotsMove(BaseLogic):
                 print("OTW Base\n")
                 base = board_bot.properties.base
                 self.goal_position = base
-                
+                bots=self.get_tacklebot(board, board_bot)
+                for bot in bots:
+                    if (bot.position.x//5 == current_position.x//5) and bot.position.y//5==current_position.y//5:
+                        delx=self.goal_position.x-bot.position.x
+                        dely=self.goal_position.y-bot.position.y
+                        self.goal_position.x-=delx
+                        self.goal_position.y-=dely
+                        break
                 delta_x, delta_y = self.get_way(
                     current_position.x,
                     current_position.y,
@@ -166,6 +182,12 @@ class BotsMove(BaseLogic):
                         self.goal_position = self.totalpointblock(current_position, diamond_objects)
 
                     # self.goal_position=goal_location
+                    bots=self.get_tacklebot(board, board_bot)
+                    for bot in bots:
+                        if bot.position.x in range(current_position.x -2, current_position.x +3):
+                            if bot.position.y in range(current_position.x -2, current_position.x +3):
+                                self.chase(bot)
+                                break
                     delta_x, delta_y = self.get_way(
                         current_position.x,
                         current_position.y,
@@ -174,16 +196,19 @@ class BotsMove(BaseLogic):
                     )
                     
                 else:
-                     #cri terdekat
-                 
+                    #cri terdekat
+                
                     print(f"Sono\n")
                     
                     sorted_listrangediamond = sorted(listrangediamond, key=lambda x: x[0])
                     # print(sorted_listrangediamond)
-                    # if props.diamonds==4 and sorted_listrangediamond[0][2]==2:
-                    #      sorted_listrangediamond.pop(0)
+                    if props.diamonds==4 and sorted_listrangediamond[0][2]==2:
+                         sorted_listrangediamond.pop(0)
                     #      print("MERAH")
-                    _,self.goal_position,_=sorted_listrangediamond[0]
+                    if len(sorted_listrangediamond)==0:
+                        self.goal_position=base
+                    else:
+                        _,self.goal_position,_=sorted_listrangediamond[0]
 
                     # print(f"Position goals: ({self.goal_position.x}, {self.goal_position.y})")
                     delta_x, delta_y = self.get_way(
