@@ -21,6 +21,8 @@ import time
 #tiap satu langkah kira kira makan 1 detik
 #ukuran table masih fix 15*15 padahal ganentu
 #belum optimal fitur red button sama teeport
+#buat fungsi menghindari teleport agar tidak looping
+#kalo diamond abis, auto ke generate diamond, pilihannya klo sisa 1 diamond, pencet red button atau ambil diamond
 
 
 ##algortima nextmove
@@ -88,7 +90,7 @@ class BotsMove(BaseLogic):
             base = board_bot.properties.base
             current_position = board_bot.position
             distanceToBase = abs(abs(base.x- current_position.x) + abs(base.y - current_position.y))
-            if props.diamonds == 5 or ( (distanceToBase +1 == (props.milliseconds_left/1000)) and props.diamonds !=0) or (distanceToBase == (props.milliseconds_left/1000)) : #error pas inventory diamond = 4 terus dapet diamond merah
+            if props.diamonds == 5 or props.diamonds == 4  or ( (distanceToBase +1 == (props.milliseconds_left/1000)) and props.diamonds !=0) or (distanceToBase == (props.milliseconds_left/1000)) : #error pas inventory diamond = 4 terus dapet diamond merah
                 # Move to base
                 print("OTW Base\n")
                 base = board_bot.properties.base
@@ -110,20 +112,28 @@ class BotsMove(BaseLogic):
             else:
                 # print(f"total :\n",totalpointblock)
                 diamond_objects = board.diamonds
-                red_button = board.game_objects
+                item_board = board.game_objects
                 totalpointblock, listrangediamond = self.current_totalpointblock(current_position, diamond_objects)
-                if totalpointblock==0:
-                    for item in red_button:
-                        if item.type=='DiamondButtonGameObject':
-                            red=item
-                            break
+                teleports = []
+                for item in item_board:
+                    if item.type=='DiamondButtonGameObject':
+                        red=item
+                    elif item.type=='TeleportGameObject':
+                        teleports.append((abs(abs(item.position.x - current_position.x) + abs(item.position.y - current_position.y)), item.position))
+                        if(len(teleports) == 2):
+                            sorted_teleport = sorted(teleports,key=lambda x: x[0])
+                            
                     
-                    redpos = red.position
-                    #pindah block
-                    # end_time = time.time()
+                
+                redpos = red.position
+                _, telpos = sorted_teleport[1]
+                if totalpointblock==0: ##bagian red buttoon
                     print(f"Sini\n")
                     if(red) and ((redpos.x//5 == current_position.x//5) and (redpos.y//5 == current_position.y//5)):
                         self.goal_position = redpos
+                    
+                    if(sorted_teleport) and ((telpos.x//5 == current_position.x//5) and (telpos.y//5 == current_position.y//5)):
+                         self.goal_position = telpos
                     else:
                         self.goal_position = self.totalpointblock(board_bot.properties.base, diamond_objects)
 
@@ -140,7 +150,7 @@ class BotsMove(BaseLogic):
                     print(f"Sono\n")
                     
                     sorted_listrangediamond = sorted(listrangediamond, key=lambda x: x[0])
-                    print(sorted_listrangediamond)
+                    # print(sorted_listrangediamond)
                     # if props.diamonds==4 and sorted_listrangediamond[0][2]==2:
                     #      sorted_listrangediamond.pop(0)
                     #      print("MERAH")
