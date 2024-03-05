@@ -40,15 +40,30 @@ class BotsMove(BaseLogic):
     def isIntheway(self,current_x, current_y, dest_x, dest_y,tele_x,tele_y):
         direction_x=0
         direction_y=0
+        print("test sini\n")
         if(current_x==dest_x and tele_x==dest_x):
-            direction_x=0
-            direction_y=1
-            return direction_x,direction_y
+            # direction_x=0
+            # direction_y=1
+            # if (current_x == 0 or current_y == 0):
+            #         direction_y *= (-1)
+            # elif (current_x == 14 or current_y == 14):
+            #         direction_x *= (-1)
+            # print("keluar sini\n")
+            # return direction_x,direction_y
+            return True
+            
         elif(current_y==dest_y and tele_y==dest_y):
-            direction_x=0
-            direction_y=1
-            return direction_x,direction_y
-        return direction_x,direction_y
+        #     direction_x=1
+        #     direction_y=0
+        #     if (current_x == 0 or current_y == 0):
+        #             direction_y *= (-1)
+        #     elif (current_x == 14 or current_y == 14):
+        #             direction_x *= (-1)
+        #     print("keluar sono\n")
+        #     return direction_x,direction_y
+            return True
+        # return direction_x,direction_y
+        return False
     def get_way(self, current_x, current_y, dest_x, dest_y, base, telestart:Position, teletarget:Position, checktele):
         delta_x = self.boundary(dest_x - current_x, -1, 1)
         delta_y = self.boundary(dest_y - current_y, -1, 1)
@@ -63,38 +78,23 @@ class BotsMove(BaseLogic):
             #periksa jika melewati teleporter
             if (next_pos_x == telestart.x and next_pos_y == telestart.y):
                 # Perhitungkan berdasarkan posisi terhadap base
-                if(delta_x!=0):
+                if(next_pos_x == telestart.x and next_pos_y != telestart.x):
                     delta_x = 0
-                    delta_y = 1
                 else:
                     delta_y = 0
-                    delta_x = 1
-                
-                if (current_x == 0 or current_y == 0):
-                    delta_y *= (-1)
-                elif (current_x == 14 or current_y == 14):
-                    delta_x *= (-1)
-
                 print("anjing\n")
                     
             elif(next_pos_x == teletarget.x and next_pos_y == teletarget.y):
-                if(delta_x!=0):
+                if(next_pos_x == telestart.x and next_pos_y != telestart.x):
                     delta_x = 0
-                    delta_y = 1
                 else:
                     delta_y = 0
-                    delta_x = 1
-                
-                if (current_x == 0 or current_y == 0):
-                    delta_y *= (-1)
-                elif (current_x == 14 or current_y == 14):
-                    delta_x *= (-1)
                     
                 print("anjing\n")
-        if self.isIntheway(current_x, current_y, dest_x, dest_y,telestart.x,telestart.y):
-            delta_x,delta_y=self.isIntheway(current_x, current_y, dest_x, dest_y,telestart.x,telestart.y)
-        elif self.isIntheway(current_x, current_y, dest_x, dest_y,teletarget.x,teletarget.y):
-            delta_x,delta_y=self.isIntheway(current_x, current_y, dest_x, dest_y,teletarget.x,teletarget.y)
+        # if self.isIntheway(current_x, current_y, dest_x, dest_y,telestart.x,telestart.y):
+        #     delta_x,delta_y=self.isIntheway(current_x, current_y, dest_x, dest_y,telestart.x,telestart.y)
+        # elif self.isIntheway(current_x, current_y, dest_x, dest_y,teletarget.x,teletarget.y):
+        #     delta_x,delta_y=self.isIntheway(current_x, current_y, dest_x, dest_y,teletarget.x,teletarget.y)
  
         if (delta_x==0 and delta_y==0):#buat tele
             if (current_x == 0 or current_y == 0):
@@ -104,6 +104,10 @@ class BotsMove(BaseLogic):
             else:
                 delta_x = 1
                 delta_y = 0
+        else:
+            if delta_x != 0:
+                delta_y = 0
+            
         
         return (delta_x, delta_y)
 

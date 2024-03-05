@@ -1,5 +1,6 @@
 import argparse
 from time import sleep
+import time
 
 from colorama import Back, Fore, Style, init
 from game.api import Api
@@ -9,13 +10,14 @@ from game.logic.random import RandomLogic
 from game.util import *
 from game.logic.base import BaseLogic
 from game.logic.botsmove import BotsMove
+from game.logic.kangTackle import kangTackle
 
 init()
-# BASE_URL = "http://localhost:3000/api"
-BASE_URL = "http://20.243.68.103:8082/api/"  ##punya edbert
-DEFAULT_BOARD_ID = 8
+BASE_URL = "http://localhost:8083/api"
+# BASE_URL = "http://20.243.68.103:8082/api/"  ##punya edbert
+DEFAULT_BOARD_ID = 6
 CONTROLLERS = {
-    "BotsMove": BotsMove,
+    "BotsMove": BotsMove,"RandomLogic":RandomLogic,"kangTackle":kangTackle,
 }
 
 ###############################################################################
@@ -176,7 +178,9 @@ while True:
         break
 
     # Calculate next move
+    start = time.time()
     delta_x, delta_y = bot_logic.next_move(board_bot, board)
+    print(f"Time taken : {(time.time()-start)*1000} ms\n")
     # delta_x, delta_y = (1, 0)
     if not board.is_valid_move(board_bot.position, delta_x, delta_y):
         print(
@@ -204,8 +208,8 @@ while True:
         break
 
     # Don't spam the board more than it allows!
-    sleep(move_delay * time_factor)
-    # sleep(0.1)
+    # sleep(move_delay * time_factor)
+    sleep(0.1)
     # sleep(1)
 
 
