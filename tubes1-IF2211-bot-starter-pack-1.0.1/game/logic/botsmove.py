@@ -44,20 +44,63 @@ class BotsMove(BaseLogic):
             delta_y = 0
         if(not checktele):
             if((current_x+delta_x == telestart.x) and (current_y+delta_y == telestart.y)):
-                if ((teletarget.x//5 != base.x//5) and (teletarget.y//5 != base.y//5)):
-                    delta_y = -1
+                    if(base.x == current_x):
+                        delta_x = 0
+                        delta_y = -1
+                                    
+                    elif(base.y == current_y):
+                        delta_x = 1
+                        delta_y =0
+                    else:
+                        # Jika teleporter berada di antara base dan tujuan, ubah arah pergerakan ke arah yang lebih dekat dengan base
+                        if base.x < teletarget.x:
+                            delta_x = -1
+                        elif base.x > teletarget.x:
+                            delta_x = 1
+                        else:
+                            delta_x = 0
+
+                        if base.y < teletarget.y:
+                            delta_y = -1
+                        elif base.y > teletarget.y:
+                            delta_y = 1
+                        else:
+                            delta_y = 0
+
             elif ((current_x+delta_x == teletarget.x) and (current_y+delta_y == teletarget.y)):
                 if ((telestart.x//5 != base.x//5) and (telestart.y//5 != base.y//5)):
+                    if(base.x == current_x):
+                        delta_x = 0
+                        delta_y = -1
+                                    
+                    elif(base.y == current_y):
+                        delta_x = 1
+                        delta_y =0
+                    else:
+                        # Jika teleporter berada di antara base dan tujuan, ubah arah pergerakan ke arah yang lebih dekat dengan base
+                        if base.x < teletarget.x:
+                            delta_x = -1
+                        elif base.x > teletarget.x:
+                            delta_x = 1
+
+                        if base.y < teletarget.y:
+                            delta_y = -1
+                        elif base.y > teletarget.y:
+                            delta_y = 1
+        # if delta_x==0 and delta_y==0: #buat tele
+        if(delta_x == delta_y):
+            if delta_x != 0:
+                delta_x = 0
+            elif(delta_x == 0):
+                if(current_x == 0):
                     delta_y = -1
-        if delta_x==0 and delta_y==0: #buat tele
-            if(current_x == 0):
-                delta_y = 1
-            elif(current_x == 14):
-                delta_y = -1
-            elif(current_y == 0):
-                delta_x = 1
-            elif(current_y == 14):
-                delta_x = -1
+                elif(current_x == 14):
+                    delta_y = -1
+                elif(current_y == 0):
+                    delta_y = -1
+                elif(current_y == 14):
+                    delta_y = 1
+
             
 
         return (delta_x, delta_y)
@@ -187,12 +230,12 @@ class BotsMove(BaseLogic):
                         self.goal_position = self.totalpointblock(current_position, diamond_objects)
 
                     # self.goal_position=goal_location
-                    bots=self.get_tacklebot(board, board_bot)
-                    for bot in bots:
-                        if bot.position.x in range(current_position.x -2, current_position.x +3):
-                            if bot.position.y in range(current_position.x -2, current_position.x +3):
-                                self.chase(bot)
-                                break
+                    # bots=self.get_tacklebot(board, board_bot)
+                    # for bot in bots:
+                    #     if bot.position.x in range(current_position.x -2, current_position.x +3):
+                    #         if bot.position.y in range(current_position.x -2, current_position.x +3):
+                    #             self.chase(bot)
+                    #             break
                     
                 else:
                     #cri terdekat

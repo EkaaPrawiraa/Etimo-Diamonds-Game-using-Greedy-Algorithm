@@ -13,7 +13,7 @@ from game.logic.botsmove import BotsMove
 init()
 BASE_URL = "http://localhost:3000/api"
 # BASE_URL = "http://20.243.68.103:8082/api/"  ##punya edbert
-DEFAULT_BOARD_ID = 6
+DEFAULT_BOARD_ID = 8
 CONTROLLERS = {
     "BotsMove": BotsMove,
 }
@@ -204,8 +204,8 @@ while True:
         break
 
     # Don't spam the board more than it allows!
-    # sleep(move_delay * time_factor)
-    sleep(0.1)
+    sleep(move_delay * time_factor)
+    # sleep(0.1)
     # sleep(1)
 
 
