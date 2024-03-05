@@ -210,6 +210,14 @@ class BotsMove(BaseLogic):
                         dely=self.goal_position.y-bot.position.y
                         self.goal_position.x-=delx
                         self.goal_position.y-=dely
+                        if self.goal_position.x>14:
+                            self.goal_position.x=14
+                        if self.goal_position.x<0:
+                            self.goal_position.x=0
+                        if self.goal_position.y>14:
+                            self.goal_position.y=14
+                        if self.goal_position.y<0:
+                            self.goal_position.y=0
                         break
             else:
                 diamond_objects = board.diamonds
