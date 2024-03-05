@@ -37,11 +37,18 @@ class BotsMove(BaseLogic):
     def boundary(self, n, smallest, largest):
         return max(smallest, min(n, largest))
     
-    def get_way(self, current_x, current_y, dest_x, dest_y):
+    def get_way(self, current_x, current_y, dest_x, dest_y, base, telestart, teletarget, checktele):
         delta_x = self.boundary(dest_x - current_x, -1, 1)
         delta_y = self.boundary(dest_y - current_y, -1, 1)
         if delta_x != 0:
             delta_y = 0
+        if(not checktele):
+            if((current_x+delta_x == telestart.x) and (current_y+delta_y == telestart.y)):
+                if ((teletarget.x//5 != base.x//5) and (teletarget.y//5 != base.y//5)):
+                    delta_y = -1
+            elif ((current_x+delta_x == teletarget.x) and (current_y+delta_y == teletarget.y)):
+                if ((telestart.x//5 != base.x//5) and (telestart.y//5 != base.y//5)):
+                    delta_y = -1
         if delta_x==0 and delta_y==0: #buat tele
             if(current_x == 0):
                 delta_y = 1
@@ -72,8 +79,7 @@ class BotsMove(BaseLogic):
         checktele = False
         for item in item_board:
             if(checkred) and (checktele):
-                break
-            
+                break         
             else:
                 if item.type=='DiamondButtonGameObject':
                     red=item
@@ -145,6 +151,10 @@ class BotsMove(BaseLogic):
             base = board_bot.properties.base
             current_position = board_bot.position
             distanceToBase = abs(abs(base.x- current_position.x) + abs(base.y - current_position.y))
+            redpos, teleport = self.get_redbut_telep(board,board_bot)
+            _, telestart = teleport[0]
+            _, teletarget = teleport[1]
+            checktele = False
             if props.diamonds == 5 or props.diamonds == 4  or ( (distanceToBase +1 == (props.milliseconds_left/1000)) and props.diamonds !=0) or (distanceToBase == (props.milliseconds_left/1000)) : #error pas inventory diamond = 4 terus dapet diamond merah
                 # Move to base
                 print("OTW Base\n")
@@ -158,23 +168,18 @@ class BotsMove(BaseLogic):
                         self.goal_position.x-=delx
                         self.goal_position.y-=dely
                         break
-                delta_x, delta_y = self.get_way(
-                    current_position.x,
-                    current_position.y,
-                    self.goal_position.x,
-                    self.goal_position.y,
-                )
             else:
                 diamond_objects = board.diamonds
                 totalpointblock, listrangediamond = self.current_totalpointblock(current_position, diamond_objects)
-                redpos, teleport = self.get_redbut_telep(board,board_bot)
-                _, telestart = teleport[0]
-                _, teletarget = teleport[1]
+                # redpos, teleport = self.get_redbut_telep(board,board_bot)
+                # _, telestart = teleport[0]
+                # _, teletarget = teleport[1]
                 total_teletarget,_ = self.current_totalpointblock(teletarget, diamond_objects)
                 if totalpointblock==0: ##bagian red buttoon
                     print(f"Sini\n")
                     if ((telestart.x//5 == current_position.x//5) and (telestart.y//5 == current_position.y//5)) and (total_teletarget != 0):
                         print(f"tele\n")
+                        checktele = True
                         self.goal_position = telestart
                     elif ((redpos.x//5 == current_position.x//5) and (redpos.y//5 == current_position.y//5)):
                         self.goal_position = redpos
@@ -188,12 +193,6 @@ class BotsMove(BaseLogic):
                             if bot.position.y in range(current_position.x -2, current_position.x +3):
                                 self.chase(bot)
                                 break
-                    delta_x, delta_y = self.get_way(
-                        current_position.x,
-                        current_position.y,
-                        self.goal_position.x,
-                        self.goal_position.y,
-                    )
                     
                 else:
                     #cri terdekat
@@ -211,12 +210,17 @@ class BotsMove(BaseLogic):
                         _,self.goal_position,_=sorted_listrangediamond[0]
 
                     # print(f"Position goals: ({self.goal_position.x}, {self.goal_position.y})")
-                    delta_x, delta_y = self.get_way(
-                        current_position.x,
-                        current_position.y,
-                        self.goal_position.x,
-                        self.goal_position.y,
-                    )
+
+            delta_x, delta_y = self.get_way(
+                current_position.x,
+                current_position.y,
+                self.goal_position.x,
+                self.goal_position.y,
+                base,
+                telestart,
+                teletarget,
+                checktele,
+            )
 
             return delta_x,delta_y
     
