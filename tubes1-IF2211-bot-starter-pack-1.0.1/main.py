@@ -20,6 +20,8 @@ CONTROLLERS = {
     "BotsMove": BotsMove,"RandomLogic":RandomLogic,"kangTackle":kangTackle,
 }
 
+#prit
+
 ###############################################################################
 #
 # Parse command line arguments
