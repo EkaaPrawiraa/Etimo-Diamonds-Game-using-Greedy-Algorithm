@@ -11,8 +11,8 @@ from game.logic.base import BaseLogic
 from game.logic.botsmove import BotsMove
 
 init()
-BASE_URL = "http://localhost:3000/api"
-# BASE_URL = "http://20.243.68.103:8082/api/"  ##punya edbert
+# BASE_URL = "http://localhost:3000/api"
+BASE_URL = "http://20.243.68.103:8082/api/"  ##punya edbert
 DEFAULT_BOARD_ID = 8
 CONTROLLERS = {
     "BotsMove": BotsMove,
