@@ -40,70 +40,42 @@ class BotsMove(BaseLogic):
     def get_way(self, current_x, current_y, dest_x, dest_y, base, telestart, teletarget, checktele):
         delta_x = self.boundary(dest_x - current_x, -1, 1)
         delta_y = self.boundary(dest_y - current_y, -1, 1)
+        
         if delta_x != 0:
             delta_y = 0
-        if(not checktele):
-            if((current_x+delta_x == telestart.x) and (current_y+delta_y == telestart.y)):
-                    if(base.x == current_x):
-                        delta_x = 0
-                        delta_y = -1
-                                    
-                    elif(base.y == current_y):
-                        delta_x = 1
-                        delta_y =0
-                    else:
-                        # Jika teleporter berada di antara base dan tujuan, ubah arah pergerakan ke arah yang lebih dekat dengan base
-                        if base.x < teletarget.x:
-                            delta_x = -1
-                        elif base.x > teletarget.x:
-                            delta_x = 1
-                        else:
-                            delta_x = 0
+        
+        if not checktele:
+             # Periksa posisi berikutnya
+            next_pos_x = current_x + delta_x
+            next_pos_y = current_y + delta_y
+            #periksa jika melewati teleporter
+            if (next_pos_x == telestart.x and next_pos_y == telestart.y) or (next_pos_x == teletarget.x and next_pos_y == teletarget.y):
+                # Perhitungkan berdasarkan posisi terhadap base
+                if base.x < telestart.x:
+                    delta_x = -1  # Move left
+                    delta_y = 0
+                elif base.x > telestart.x:
+                    delta_x = 1   # Move right
+                    delta_y - 0
+                    
+                if base.y < telestart.y:
+                    delta_y = -1  # Move up
+                    delta_x = 0
+                elif base.y > telestart.y:
+                    delta_y = 1   # Move down
+                    delta_x = 0
 
-                        if base.y < teletarget.y:
-                            delta_y = -1
-                        elif base.y > teletarget.y:
-                            delta_y = 1
-                        else:
-                            delta_y = 0
-
-            elif ((current_x+delta_x == teletarget.x) and (current_y+delta_y == teletarget.y)):
-                if ((telestart.x//5 != base.x//5) and (telestart.y//5 != base.y//5)):
-                    if(base.x == current_x):
-                        delta_x = 0
-                        delta_y = -1
-                                    
-                    elif(base.y == current_y):
-                        delta_x = 1
-                        delta_y =0
-                    else:
-                        # Jika teleporter berada di antara base dan tujuan, ubah arah pergerakan ke arah yang lebih dekat dengan base
-                        if base.x < teletarget.x:
-                            delta_x = -1
-                        elif base.x > teletarget.x:
-                            delta_x = 1
-
-                        if base.y < teletarget.y:
-                            delta_y = -1
-                        elif base.y > teletarget.y:
-                            delta_y = 1
-        # if delta_x==0 and delta_y==0: #buat tele
-        if(delta_x == delta_y):
-            if delta_x != 0:
-                delta_x = 0
-            elif(delta_x == 0):
-                if(current_x == 0):
+            if delta_x==0 and delta_y==0:#buat tele
+                if (current_x == 0 or current_y == 0):
+                    delta_x = 1
+                elif current_x == 14 or current_y == 14:
                     delta_y = -1
-                elif(current_x == 14):
-                    delta_y = -1
-                elif(current_y == 0):
-                    delta_y = -1
-                elif(current_y == 14):
-                    delta_y = 1
-
-            
+                else:
+                    delta_x = 1
+                    delta_y = 0
 
         return (delta_x, delta_y)
+
     def chase(self, bot2:GameObject):
         self.goal_position=bot2.position
 
