@@ -233,14 +233,15 @@ class BotsMove(BaseLogic):
 
                #kondisi kalo current block point tidak 0 dan mencari diamond terdekat 
                 else:
-                    sorted_listrangediamond = sorted(listrangediamond, key=lambda x: x[0])
-                    # mengatasi error ketika diamond kita 4 dan ada red diamond
-                    if props.diamonds==4 and sorted_listrangediamond[0][2]==2:
-                         sorted_listrangediamond.pop(0)
-                    if len(sorted_listrangediamond)==0:
-                        self.goal_position=base
-                    else:
-                       _,self.goal_position,_=sorted_listrangediamond[0]
+                     self.goal_position = self.closestDiamond(current_position, diamond_objects,board)
+                    # sorted_listrangediamond = sorted(listrangediamond, key=lambda x: x[0])
+                    # # mengatasi error ketika diamond kita 4 dan ada red diamond
+                    # if props.diamonds==4 and sorted_listrangediamond[0][2]==2:
+                    #      sorted_listrangediamond.pop(0)
+                    # if len(sorted_listrangediamond)==0:
+                    #     self.goal_position=base
+                    # else:
+                    #    _,self.goal_position,_=sorted_listrangediamond[0]
                         
                     
 
