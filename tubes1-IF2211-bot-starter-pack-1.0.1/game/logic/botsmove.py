@@ -72,26 +72,45 @@ class BotsMove(BaseLogic):
         #     delta_y = 0
         
         if not checktele:
-             # Periksa posisi berikutnya
+            #  Periksa posisi berikutnya
             next_pos_x = current_x + delta_x
             next_pos_y = current_y + delta_y
             #periksa jika melewati teleporter
-            if (next_pos_x == telestart.x and next_pos_y == telestart.y):
+            if (next_pos_x == telestart.x or next_pos_y == telestart.y):
                 # Perhitungkan berdasarkan posisi terhadap base
-                if(next_pos_x == telestart.x and current_y+1 == telestart.y) and (next_pos_y != telestart.x):
-                    delta_y = 0
-                else:
-                    delta_x = 0
-                check = True
-                print("anjing\n")
+                if(next_pos_x == telestart.x and next_pos_y == telestart.y):
+                    if(dest_x == telestart.x):
+                        if(current_x == telestart.x):
+                            delta_y = 0
+                        elif(current_x != telestart.x):
+                            delta_x = 0
+                    elif(dest_y == telestart.y):
+                        if(current_y == telestart.y):
+                            delta_x = 0
+                        elif(current_y != telestart.y):
+                            delta_y = 0
+
+                    check = True
+                
+                    print("anjing 1\n")
+            elif (next_pos_x == teletarget.x or next_pos_y == teletarget.y):
+                # Perhitungkan berdasarkan posisi terhadap base
+                if(next_pos_x == teletarget.x and next_pos_y == teletarget.y):
+                    if(dest_x == teletarget.x):
+                        if(current_x == telestart.x):
+                            delta_y = 0
+                        elif(current_x != teletarget.x):
+                            delta_x = 0
+                    elif(dest_y == teletarget.y):
+                        if(current_y == teletarget.y):
+                            delta_x = 0
+                        elif(current_y != teletarget.y):
+                            delta_y = 0
                     
-            elif(next_pos_x == teletarget.x and next_pos_y == teletarget.y):
-                if(next_pos_x == teletarget.x and current_y+1 == teletarget.y) and (next_pos_y != teletarget.x):
-                    delta_y = 0
-                else:
-                    delta_x = 0
-                check = True
-                print("anjing\n")
+                    check = True
+                
+                    print("anjing 2\n")
+
         # if self.isIntheway(current_x, current_y, dest_x, dest_y,telestart.x,telestart.y):
         #     delta_x,delta_y=self.isIntheway(current_x, current_y, dest_x, dest_y,telestart.x,telestart.y)
         # elif self.isIntheway(current_x, current_y, dest_x, dest_y,teletarget.x,teletarget.y):
@@ -101,7 +120,7 @@ class BotsMove(BaseLogic):
             if (current_x == 0 or current_y == 0):
                 delta_x = 1
             elif (current_x == 14 or current_y == 14):
-                delta_y = -1
+                delta_x = -1
             else:
                 delta_x = 1
                 delta_y = 0
