@@ -19,6 +19,7 @@ Meskipun terdapat method diamonds pada board, method ini tetap melakukan pencari
 `https://github.com/haziqam/tubes1-IF2211-game-engine/releases/tag/v1.1.0`
 ### 3) Clone repository ini
 ### 4) Buka terminal dengan repository project
+`cd tubes1-IF2110-bot-starter-pack-1.0.1`
 ### 5) Install dependencies menggunakan pip
 `pip install -r requirements.txt`
 ### 6) Run
