@@ -233,10 +233,10 @@ class BotsMove(BaseLogic):
                 bots=self.get_tacklebot(board, board_bot)
                 for bot in bots:
                     if (bot.position.x//5 == current_position.x//5) and bot.position.y//5==current_position.y//5:
-                        delx=bot.position.x
-                        dely=bot.position.y
-                        self.goal_position.x-=delx
-                        self.goal_position.y-=dely
+                        delx=self.goal_position.x-bot.position.x
+                        dely=self.goal_position.ybot.position.y
+                        self.goal_position.x+=delx
+                        self.goal_position.y+=dely
                         if self.goal_position.x>14:
                             self.goal_position.x=14
                         if self.goal_position.x<0:
