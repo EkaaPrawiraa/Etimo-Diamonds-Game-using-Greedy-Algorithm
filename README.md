@@ -1,4 +1,12 @@
-# Tubes-1-STIMA
+# Tubes1-STIMA-Etimo Diamonds
+
+## Kelompok urbanGym
+```
+Mohammad Nugraha Eka Prawira 13522001
+Ahmad Farid Mudrika          13522008
+Muhammad Yusuf Rafi          13522009
+```
+## Deskripsi Implementasi Greedy
 ```
 Pada permainan Diamond, banyak gamestate yang bisa kita ketahui dengan mudah seperti posisi pemain, posisi lawan, inventori pemain, inventori lawan, dan lain-lain.
 Tentu hal tersebut memudahkan program agar berjalan dengan efektif.
