@@ -11,13 +11,14 @@ from game.util import *
 from game.logic.base import BaseLogic
 from game.logic.botsmove import BotsMove
 from game.logic.kangTackle import kangTackle
+from game.logic.pAdu import pAdu
 
 init()
-# BASE_URL = "http://localhost:3000/api"
-BASE_URL = "http://20.243.68.103:8082/api/"  ##punya edbert
-DEFAULT_BOARD_ID = 5
+BASE_URL = "http://localhost:3000/api"
+# BASE_URL = "http://20.243.68.103:8082/api/"  ##punya edbert
+DEFAULT_BOARD_ID = 10
 CONTROLLERS = {
-    "BotsMove": BotsMove,"RandomLogic":RandomLogic,"kangTackle":kangTackle,
+    "BotsMove": BotsMove,"RandomLogic":RandomLogic,"kangTackle":kangTackle,"pAdu":pAdu,
 }
 
 #prit
@@ -210,9 +211,9 @@ while True:
         break
 
     # Don't spam the board more than it allows!
-    sleep(move_delay * time_factor)
+    # sleep(move_delay * time_factor)
     # sleep(0.1)
-    # sleep(1)
+    sleep(1)
 
 
 

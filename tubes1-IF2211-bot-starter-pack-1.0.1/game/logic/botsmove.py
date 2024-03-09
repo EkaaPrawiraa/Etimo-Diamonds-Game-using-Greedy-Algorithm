@@ -159,6 +159,16 @@ class BotsMove(BaseLogic):
         _,_, self.goal_position=sorted_totaleveryblock[0]
         return self.goal_position
 
+    def closestDiamond(self,start_position,diamond_objects,Board:Board):
+            minlength=10000
+            for i in range(Board.width):
+                for j in range(Board.height):
+                    for diamond in diamond_objects:
+                            if minlength>((abs(abs(diamond.position.x - start_position.x) + abs(diamond.position.y - start_position.y)))):
+                                minlength=((abs(abs(diamond.position.x - start_position.x) + abs(diamond.position.y - start_position.y))))
+                                self.goal_position=diamond.position
+            return self.goal_position
+
 
     def next_move(self, board_bot: GameObject, board: Board):
             props = board_bot.properties
@@ -227,7 +237,10 @@ class BotsMove(BaseLogic):
                     if len(sorted_listrangediamond)==0:
                         self.goal_position=base
                     else:
-                        _,self.goal_position,_=sorted_listrangediamond[0]
+                        if(props.diamonds <2):
+                            _,self.goal_position,_=sorted_listrangediamond[0]
+                        else:
+                             self.goal_position = self.closestDiamond(current_position, diamond_objects,board)
                     
 
             delta_x, delta_y = self.get_way(
