@@ -12,5 +12,7 @@ Meskipun terdapat method diamonds pada board, method ini tetap melakukan pencari
 ```
 
 # Requirements
-## 1) Python
-## 2) 
+'''
+### 1) Python
+### 2) 
+'''
