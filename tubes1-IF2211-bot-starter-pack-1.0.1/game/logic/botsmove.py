@@ -209,6 +209,15 @@ class BotsMove(BaseLogic):
                     # kondisi mencari ke block lain
                     else:
                         self.goal_position = self.totalpointblock(current_position, diamond_objects)
+                # self.goal_position=goal_location
+                            # bots=self.get_tacklebot(board, board_bot)
+                            # for bot in bots:
+                            #     if bot.position.x in range(current_position.x -2, current_position.x +3):
+                            #         if bot.position.y in range(current_position.x -2, current_position.x +3):
+                            #             self.chase(bot)
+                            #             break
+
+
                #kondisi kalo current block point tidak 0 dan mencari diamond terdekat 
                 else:
                     sorted_listrangediamond = sorted(listrangediamond, key=lambda x: x[0])
@@ -219,6 +228,7 @@ class BotsMove(BaseLogic):
                         self.goal_position=base
                     else:
                         _,self.goal_position,_=sorted_listrangediamond[0]
+                    
 
             delta_x, delta_y = self.get_way(
                 current_position.x,
