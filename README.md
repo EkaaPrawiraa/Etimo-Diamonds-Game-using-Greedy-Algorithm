@@ -14,7 +14,9 @@ Meskipun terdapat method diamonds pada board, method ini tetap melakukan pencari
 # Requirements
 
 ### 1) Python
+`https://www.python.org/downloads`
 ### 2) Clone repository game-engine dan jalankan requirementsnya
+`https://github.com/haziqam/tubes1-IF2211-game-engine/releases/tag/v1.1.0`
 ### 3) Clone repository ini
 ### 4) Buka terminal dengan repository project
 ### 5) Install dependencies menggunakan pip
