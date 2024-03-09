@@ -22,5 +22,5 @@ Meskipun terdapat method diamonds pada board, method ini tetap melakukan pencari
 ### 6) Run
 ```
 python main.py --logic Random --email=your_email@example.com --name=your_name --password=your_password --team etimo
-'''
+```
 
