@@ -180,7 +180,7 @@ class BotsMove(BaseLogic):
                 for bot in bots:
                     if (bot.position.x//5 == current_position.x//5) and bot.position.y//5==current_position.y//5:
                         delx=self.goal_position.x-bot.position.x
-                        dely=self.goal_position.ybot.position.y
+                        dely=self.goal_position.y-bot.position.y
                         self.goal_position.x+=delx
                         self.goal_position.y+=dely
                         if self.goal_position.x>14:
@@ -209,7 +209,7 @@ class BotsMove(BaseLogic):
                     # kondisi mencari ke block lain
                     else:
                         self.goal_position = self.totalpointblock(current_position, diamond_objects)
-                # self.goal_position=goal_location
+                        #jika ingin chase(tidak efektif)
                             # bots=self.get_tacklebot(board, board_bot)
                             # for bot in bots:
                             #     if bot.position.x in range(current_position.x -2, current_position.x +3):
