@@ -12,7 +12,15 @@ Meskipun terdapat method diamonds pada board, method ini tetap melakukan pencari
 ```
 
 # Requirements
-'''
+
 ### 1) Python
-### 2) 
+### 2) Clone repository game-engine dan jalankan requirementsnya
+### 3) Clone repository ini
+### 4) Buka terminal dengan repository project
+### 5) Install dependencies menggunakan pip
+`pip install -r requirements.txt`
+### 6) Run
+```
+python main.py --logic Random --email=your_email@example.com --name=your_name --password=your_password --team etimo
 '''
+
