@@ -14,8 +14,8 @@ from game.logic.kangTackle import kangTackle
 from game.logic.pAdu import pAdu
 
 init()
-# BASE_URL = "http://localhost:3000/api"
-BASE_URL = "http://20.243.68.103:8082/api/"  ##punya edbert
+BASE_URL = "http://localhost:3000/api"
+# BASE_URL = "http://20.243.68.103:8082/api/"  ##punya edbert
 DEFAULT_BOARD_ID = 10
 CONTROLLERS = {
     "BotsMove": BotsMove,"RandomLogic":RandomLogic,"kangTackle":kangTackle,"pAdu":pAdu,
