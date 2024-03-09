@@ -13,9 +13,9 @@ from game.logic.botsmove import BotsMove
 from game.logic.kangTackle import kangTackle
 
 init()
-BASE_URL = "http://localhost:3000/api"
-# BASE_URL = "http://20.243.68.103:8082/api/"  ##punya edbert
-DEFAULT_BOARD_ID = 10
+# BASE_URL = "http://localhost:3000/api"
+BASE_URL = "http://20.243.68.103:8082/api/"  ##punya edbert
+DEFAULT_BOARD_ID = 5
 CONTROLLERS = {
     "BotsMove": BotsMove,"RandomLogic":RandomLogic,"kangTackle":kangTackle,
 }
@@ -210,8 +210,8 @@ while True:
         break
 
     # Don't spam the board more than it allows!
-    # sleep(move_delay * time_factor)
-    sleep(0.1)
+    sleep(move_delay * time_factor)
+    # sleep(0.1)
     # sleep(1)
 
 

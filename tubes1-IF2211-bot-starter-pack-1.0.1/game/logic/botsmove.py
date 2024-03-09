@@ -31,51 +31,20 @@ class BotsMove(BaseLogic):
             self.directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
             self.block_in = [(0,0),(0,1),(0,2),(1,0),(1,1),(1,2),(2,0),(2,1),(2,2)]
             self.goal_position: Optional[Position] = None
-            self.current_direction = 0
-            #sisanya apa 
-
-    def boundary(self, n, smallest, largest):
+    # pengganti fungsi clam
+    def boundary(self, n, smallest, largest): 
         return max(smallest, min(n, largest))
-    
-    # def isIntheway(self,current_x, current_y, dest_x, dest_y,tele_x,tele_y):
-    #     direction_x=0
-    #     direction_y=0
-    #     print("test sini\n")
-    #     if(current_x==dest_x and tele_x==dest_x):
-    #         # direction_x=0
-    #         # direction_y=1
-    #         # if (current_x == 0 or current_y == 0):
-    #         #         direction_y *= (-1)
-    #         # elif (current_x == 14 or current_y == 14):
-    #         #         direction_x *= (-1)
-    #         # print("keluar sini\n")
-    #         # return direction_x,direction_y
-    #         return True
-            
-    #     elif(current_y==dest_y and tele_y==dest_y):
-    #     #     direction_x=1
-    #     #     direction_y=0
-    #     #     if (current_x == 0 or current_y == 0):
-    #     #             direction_y *= (-1)
-    #     #     elif (current_x == 14 or current_y == 14):
-    #     #             direction_x *= (-1)
-    #     #     print("keluar sono\n")
-    #     #     return direction_x,direction_y
-    #         return True
-    #     # return direction_x,direction_y
-    #     return False
+    #pengganti fungsi get direction sesuai kriteria baru
     def get_way(self, current_x, current_y, dest_x, dest_y, base, telestart:Position, teletarget:Position, checktele):
         delta_x = self.boundary(dest_x - current_x, -1, 1)
         delta_y = self.boundary(dest_y - current_y, -1, 1)
         check = False
-        # if delta_x != 0:
-        #     delta_y = 0
         
         if not checktele:
              # Periksa posisi berikutnya
             next_pos_x = current_x + delta_x
             next_pos_y = current_y + delta_y
-            #periksa jika melewati teleporter
+            #periksa jika melewati teleport
             if (next_pos_x == telestart.x and next_pos_y == telestart.y):
                 # Perhitungkan berdasarkan posisi terhadap base
                 if(next_pos_x == telestart.x and current_y+1 == telestart.y) and (next_pos_y != telestart.x):
@@ -83,7 +52,7 @@ class BotsMove(BaseLogic):
                 else:
                     delta_x = 0
                 check = True
-                print("anjing\n")
+                
                     
             elif(next_pos_x == teletarget.x and next_pos_y == teletarget.y):
                 if(next_pos_x == teletarget.x and current_y+1 == teletarget.y) and (next_pos_y != teletarget.x):
@@ -91,11 +60,6 @@ class BotsMove(BaseLogic):
                 else:
                     delta_x = 0
                 check = True
-                print("anjing\n")
-        # if self.isIntheway(current_x, current_y, dest_x, dest_y,telestart.x,telestart.y):
-        #     delta_x,delta_y=self.isIntheway(current_x, current_y, dest_x, dest_y,telestart.x,telestart.y)
-        # elif self.isIntheway(current_x, current_y, dest_x, dest_y,teletarget.x,teletarget.y):
-        #     delta_x,delta_y=self.isIntheway(current_x, current_y, dest_x, dest_y,teletarget.x,teletarget.y)
  
         if (delta_x==0 and delta_y==0):#buat tele
             if (current_x == 0 or current_y == 0):
@@ -112,16 +76,19 @@ class BotsMove(BaseLogic):
         
         return (delta_x, delta_y)
 
+# fungsi untuk mengejar bot lain jika berada di dekat  bot kita
     def chase(self, bot2:GameObject):
         self.goal_position=bot2.position
-
+# fungsi untuk mencari apakah ada bot lain di board
     def get_tacklebot(self, board:Board, board_bot):
         item=board.game_objects
         tacklers=[]
-        for a in item:
+        for a in item:                  
+            #bot lain memiliki type BotGameObject dan pastikan itu bukan bot kita
             if a.type=="BotGameObject" and a.properties.can_tackle and a.position!=board_bot.position:
                 tacklers.append(a)
         return tacklers
+    # fungsi untuk mencari lokasi redbutton dan juga teleport
     def get_redbut_telep(self, board,board_bot):
         item_board = board.game_objects
         teleports = []
@@ -129,9 +96,11 @@ class BotsMove(BaseLogic):
         checkred = False
         checktele = False
         for item in item_board:
+            # kasus berhenti ketika lokasi dua duanya telah ditemukan
             if(checkred) and (checktele):
                 break         
             else:
+                # Mencari dengan kondisi sesuai typenya
                 if item.type=='DiamondButtonGameObject':
                     red=item
                     checkred = True
@@ -144,8 +113,9 @@ class BotsMove(BaseLogic):
         redpos = red.position
 
         return redpos, sorted_teleport
-    
+    # fungsi untuk mencari total point diamond pada block bot berada
     def current_totalpointblock(self, current_position, diamond_objects):
+        # block bot didapatkan dengan membagi total board menjai 9 block
         whichBlock_x = current_position.x//5
         whichBlock_y=current_position.y//5
         block_start_row = whichBlock_x * 5
@@ -159,16 +129,11 @@ class BotsMove(BaseLogic):
                     for diamond in diamond_objects:
                         if (diamond.position.x==k ) and (diamond.position.y==l):
                             totalpointblock+=diamond.properties.points
-                            # print(f"total :\n",diamond.properties.points)
                             listrangediamond.append((abs(abs(diamond.position.x - current_position.x) + abs(diamond.position.y - current_position.y)), diamond.position, diamond.properties.points))
-                            
-
-
         return totalpointblock, listrangediamond
-           
+    #fungsi untuk mencari point total block pada semua block dan mencari lokasi terdekat dengan base bot kita
     def totalpointblock(self,start_position,diamond_objects):
-        # whichBlock_x = 15//5
-        # whichBlock_y=15//5
+        
         totaleveryblock=[]
         for i in range(3):
              for j in range(3):
@@ -178,14 +143,14 @@ class BotsMove(BaseLogic):
                     block_end_col = (1 + j) * 5
                     totalpointblock=0
                     listrangediamond=[]
+                    # looping untuk tiap block
                     for k in range(block_start_row,block_end_row):
                             for l in range(block_start_col,block_end_col):
                                 for diamond in diamond_objects:
                                     if (diamond.position.x==k ) and (diamond.position.y==l):
                                         totalpointblock+=diamond.properties.points
-                                        # print(f"total :\n",diamond.properties.points)
                                         listrangediamond.append((abs(abs(diamond.position.x - start_position.x) + abs(diamond.position.y - start_position.y)), diamond.position))
-                    sorted_listrangediamond = sorted(listrangediamond, key=lambda x: x[0]) #sort berdasar jarak atau jumlah point?
+                    sorted_listrangediamond = sorted(listrangediamond, key=lambda x: x[0]) #sort berdasar jarak start position
                     if sorted_listrangediamond:
                         distance,locationdiamond=sorted_listrangediamond[0]
                         totaleveryblock.append((totalpointblock,distance,locationdiamond))
@@ -197,7 +162,6 @@ class BotsMove(BaseLogic):
 
     def next_move(self, board_bot: GameObject, board: Board):
             props = board_bot.properties
-            print(f"Time left : {props.milliseconds_left/1000} sec\n")
             # Analyze new state
             base = board_bot.properties.base
             current_position = board_bot.position
@@ -208,10 +172,11 @@ class BotsMove(BaseLogic):
             checktele = False
             if props.diamonds == 5 or props.diamonds == 4  or ( (distanceToBase +1 == (props.milliseconds_left/1000)) and props.diamonds !=0) or (distanceToBase == (props.milliseconds_left/1000)) : #error pas inventory diamond = 4 terus dapet diamond merah
                 # Move to base
-                print("OTW Base\n")
+                
                 base = board_bot.properties.base
                 self.goal_position = base
                 bots=self.get_tacklebot(board, board_bot)
+                # check selama perjalanan ke base ada bot lain dan mengindar
                 for bot in bots:
                     if (bot.position.x//5 == current_position.x//5) and bot.position.y//5==current_position.y//5:
                         delx=bot.position.x
@@ -230,45 +195,30 @@ class BotsMove(BaseLogic):
             else:
                 diamond_objects = board.diamonds
                 totalpointblock, listrangediamond = self.current_totalpointblock(current_position, diamond_objects)
-                # redpos, teleport = self.get_redbut_telep(board,board_bot)
-                # _, telestart = teleport[0]
-                # _, teletarget = teleport[1]
                 total_teletarget,_ = self.current_totalpointblock(teletarget, diamond_objects)
+                # kondisi jika total point di block kita 0
                 if totalpointblock==0: ##bagian red buttoon
-                    print(f"Sini\n")
-                    if ((telestart.x//5 == current_position.x//5) and (telestart.y//5 == current_position.y//5)) and (total_teletarget != 0):
-                        print(f"tele\n")
+                   
+                    #kondisi kalo ada red button terdekat
+                    if ((redpos.x//5 == current_position.x//5) and (redpos.y//5 == current_position.y//5)):
+                        self.goal_position = redpos
+                     # kondisi jika ada teleport terdekat dan point teleport tujuannya banyak
+                    elif ((telestart.x//5 == current_position.x//5) and (telestart.y//5 == current_position.y//5)) and (total_teletarget != 0):
                         checktele = True
                         self.goal_position = telestart
-                    elif ((redpos.x//5 == current_position.x//5) and (redpos.y//5 == current_position.y//5)):
-                        self.goal_position = redpos
+                    # kondisi mencari ke block lain
                     else:
                         self.goal_position = self.totalpointblock(current_position, diamond_objects)
-
-                    # self.goal_position=goal_location
-                    # bots=self.get_tacklebot(board, board_bot)
-                    # for bot in bots:
-                    #     if bot.position.x in range(current_position.x -2, current_position.x +3):
-                    #         if bot.position.y in range(current_position.x -2, current_position.x +3):
-                    #             self.chase(bot)
-                    #             break
-                    
+               #kondisi kalo current block point tidak 0 dan mencari diamond terdekat 
                 else:
-                    #cri terdekat
-                
-                    print(f"Sono\n")
-                    
                     sorted_listrangediamond = sorted(listrangediamond, key=lambda x: x[0])
-                    # print(sorted_listrangediamond)
+                    # mengatasi error ketika diamond kita 4 dan ada red diamond
                     if props.diamonds==4 and sorted_listrangediamond[0][2]==2:
                          sorted_listrangediamond.pop(0)
-                    #      print("MERAH")
                     if len(sorted_listrangediamond)==0:
                         self.goal_position=base
                     else:
                         _,self.goal_position,_=sorted_listrangediamond[0]
-
-                    # print(f"Position goals: ({self.goal_position.x}, {self.goal_position.y})")
 
             delta_x, delta_y = self.get_way(
                 current_position.x,
@@ -282,31 +232,3 @@ class BotsMove(BaseLogic):
             )
 
             return delta_x,delta_y
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-           #kode sementara
-                    # start_time = time.time()
-                    # for diamond in diamond_objects:
-                    #         listrangediamond.append((abs(abs(diamond.position.x - current_position.x) + abs(diamond.position.y - current_position.y)), diamond.position))
-                    
-                    # sorted_listrangediamond = sorted(listrangediamond, key=lambda x: x[0])
-                    # _,self.goal_position=sorted_listrangediamond[0]
