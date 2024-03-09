@@ -33,7 +33,7 @@ class RandomLogic(BaseLogic):
                 self.goal_position.y,
             )
         else:
-            # Roam around
+            # Roam aroundskfhskuheskuhduhkssedfuhdsduksuhdukshduusk
             delta = self.directions[self.current_direction]
             delta_x = delta[0]
             delta_y = delta[1]
