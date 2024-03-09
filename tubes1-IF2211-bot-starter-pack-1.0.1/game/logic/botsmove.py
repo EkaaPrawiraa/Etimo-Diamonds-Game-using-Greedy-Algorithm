@@ -41,7 +41,7 @@ class BotsMove(BaseLogic):
         check = False
         
         if not checktele:
-             # Periksa posisi berikutnya
+            #  Periksa posisi berikutnya
             next_pos_x = current_x + delta_x
             next_pos_y = current_y + delta_y
             #periksa jika melewati teleport
@@ -65,7 +65,7 @@ class BotsMove(BaseLogic):
             if (current_x == 0 or current_y == 0):
                 delta_x = 1
             elif (current_x == 14 or current_y == 14):
-                delta_y = -1
+                delta_x = -1
             else:
                 delta_x = 1
                 delta_y = 0
@@ -179,10 +179,10 @@ class BotsMove(BaseLogic):
                 # check selama perjalanan ke base ada bot lain dan mengindar
                 for bot in bots:
                     if (bot.position.x//5 == current_position.x//5) and bot.position.y//5==current_position.y//5:
-                        delx=bot.position.x
-                        dely=bot.position.y
-                        self.goal_position.x-=delx
-                        self.goal_position.y-=dely
+                        delx=self.goal_position.x-bot.position.x
+                        dely=self.goal_position.ybot.position.y
+                        self.goal_position.x+=delx
+                        self.goal_position.y+=dely
                         if self.goal_position.x>14:
                             self.goal_position.x=14
                         if self.goal_position.x<0:
