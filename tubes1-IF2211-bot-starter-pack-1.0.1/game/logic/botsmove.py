@@ -290,10 +290,4 @@ class BotsMove(BaseLogic):
 
 
 
-           #kode sementara
-                    # start_time = time.time()
-                    # for diamond in diamond_objects:
-                    #         listrangediamond.append((abs(abs(diamond.position.x - current_position.x) + abs(diamond.position.y - current_position.y)), diamond.position))
-                    
-                    # sorted_listrangediamond = sorted(listrangediamond, key=lambda x: x[0])
-                    # _,self.goal_position=sorted_listrangediamond[0]
+    
