@@ -10,5 +10,7 @@ Karena ada pengurutan di dalamnya, kompleksitas waktunya O(n log n).
 Pada strategi Greedy diamond, kita melakukan pencarian posisi semua diamond di board.
 Meskipun terdapat method diamonds pada board, method ini tetap melakukan pencarian iteratif, sehingga kompleksitas waktunya sama dengan strategi lain. Setelah mendapat list diamond di board dan posisinya, kita menghitung jarak tiap diamond dari kita, lalu mengurutkannya dari yang terkecil. Kita lalu memilih diamond terdekat sebagai tujuan kita.
 ```
-#
-#Requirements
+
+# Requirements
+## 1) Python
+## 2) 
